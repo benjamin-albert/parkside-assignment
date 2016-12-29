@@ -45,20 +45,24 @@ app.post('/loan', parseUrlEncoded, function(req, res, next) {
     }
   }
 
-  var loan = new Loan({
-    amount: req.body.amount,
-    value: req.body.value,
-    ssn: req.body.ssn,
-    status: (req.body.amount / req.body.value) > 0.4 ? 0 : 1
-  });
+  if (!Object.keys(locals.error).length) {
+    var loan = new Loan({
+      amount: req.body.amount,
+      value: req.body.value,
+      ssn: req.body.ssn,
+      status: (req.body.amount / req.body.value) > 0.4 ? 0 : 1
+    });
 
-  loan.save(function(err) {
-    if (err) {
-      return next(err);
-    }
+    loan.save(function(err) {
+      if (err) {
+        return next(err);
+      }
 
+      res.render('loan', locals);
+    });
+  } else {
     res.render('loan', locals);
-  });
+  }
 });
 
 module.exports = app;
