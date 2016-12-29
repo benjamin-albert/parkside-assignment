@@ -1,6 +1,7 @@
 var bodyParser = require('body-parser');
 var express = require('express');
 var app = express();
+var Loan = require('./schemas/loan');
 
 app.set('view engine', 'pug');
 
@@ -11,7 +12,7 @@ app.get('/loan', function(req, res) {
 });
 
 var parseUrlEncoded = bodyParser.urlencoded({extended: false});
-app.post('/loan', parseUrlEncoded, function(req, res) {
+app.post('/loan', parseUrlEncoded, function(req, res, next) {
   var locals = { error: {} };
   locals.value = req.body;
 
@@ -44,7 +45,20 @@ app.post('/loan', parseUrlEncoded, function(req, res) {
     }
   }
 
-  res.render('loan', locals);
+  var loan = new Loan({
+    amount: req.body.amount,
+    value: req.body.value,
+    ssn: req.body.ssn,
+    status: (req.body.amount / req.body.value) > 0.4 ? 0 : 1
+  });
+
+  loan.save(function(err) {
+    if (err) {
+      return next(err);
+    }
+
+    res.render('loan', locals);
+  });
 });
 
 module.exports = app;
