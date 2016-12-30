@@ -4,7 +4,7 @@
   "description": "Benjaamin Albert's solution to the Parkside Lending Code Challenge",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "author": "Benjamin Albert",
   "license": "ISC",
