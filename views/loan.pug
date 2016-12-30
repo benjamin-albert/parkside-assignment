@@ -2,7 +2,7 @@ extends layout
 
 mixin field(id, label)
   .form-group.has-feedback(class=error[id] ? 'has-error' : void 0)
-    label.control-label.col-sm-3(for='amount') #{label}:
+    label.control-label.col-sm-3(for= id) #{label}:
     .col-sm-9
       input.form-control(id= id, type='tel', name= id, value= value[id])
       if error[id]
