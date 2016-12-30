@@ -1,3 +1,4 @@
+var BigNumber = require('bignumber.js');
 var bodyParser = require('body-parser');
 var express = require('express');
 var app = express();
@@ -6,6 +7,12 @@ var Loan = require('./schemas/loan');
 app.set('view engine', 'pug');
 
 var blankForm = { error: {}, value: {} };
+
+app.get('/', function(req, res) {
+  Loan.find(function(err, loans) {
+    res.render('dashboard', {loans: loans});
+  });
+});
 
 app.get('/loan', function(req, res) {
   res.render('loan', blankForm);
@@ -19,13 +26,17 @@ app.post('/loan', parseUrlEncoded, function(req, res, next) {
   if (!req.body.amount) {
     locals.error.amount = 'You must enter an amount';
   } else if (Number(req.body.amount) != req.body.amount) {
-    locals.error.amount = 'Amount must be numeric';
+    locals.error.amount = 'Amount must be a number';
+  } else if (Number(req.body.amount) < 1) {
+    locals.error.amount = 'You must enter an amount';
   }
 
   if (!req.body.value) {
     locals.error.value = 'You must enter a property value';
   } else if (Number(req.body.value) != req.body.value) {
-    locals.error.value = 'Value must be numeric';
+    locals.error.value = 'Property value must be a number';
+  } else if (Number(req.body.value) < 1) {
+    locals.error.value = 'You must enter a property value';
   }
 
   if (!req.body.ssn) {
@@ -46,11 +57,18 @@ app.post('/loan', parseUrlEncoded, function(req, res, next) {
   }
 
   if (!Object.keys(locals.error).length) {
+    // I prefer decimal arithmetic over floating point arithmetic
+    // whenever money is involved.
+    var approved = 
+      new BigNumber(req.body.amount)
+        .dividedBy(req.body.value)
+        .gt(0.4);
+
     var loan = new Loan({
       amount: req.body.amount,
       value: req.body.value,
       ssn: req.body.ssn,
-      status: (req.body.amount / req.body.value) > 0.4 ? 0 : 1
+      status: approved ? 0 : 1
     });
 
     loan.save(function(err) {
