@@ -17,7 +17,7 @@ module.exports = function validateLoan(input) {
     error.value = 'You must enter a property value';
   }
 
-  if (input.amount > input.value) {
+  if (!error.amount && !error.value && input.amount > input.value) {
     error.amount = 'Amount cannot be greater than property value';
   }
 

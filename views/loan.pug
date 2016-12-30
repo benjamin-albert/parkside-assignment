@@ -1,5 +1,13 @@
 extends layout.pug
 
+mixin field(id, label)
+  .form-group.has-feedback(class=error[id] ? 'has-error' : void 0)
+    label.control-label.col-sm-3(for='amount') #{label}:
+    .col-sm-9
+      input.form-control(id= id, type='tel', name= id, value= value[id])
+      if error[id]
+        span.help-block #{error[id]}
+
 block title
   title Reaquest a loan | Parkside Lending
 
@@ -13,26 +21,9 @@ block content
 
         hr
 
-        .form-group.has-feedback(class=error.amount ? 'has-error' : void 0)
-          label.control-label.col-sm-3(for='amount') Loan amount:
-          .col-sm-9
-            input#amount.form-control(type='tel', name='amount', value= value.amount)
-            if error.amount
-              span.help-block #{error.amount}
-
-        .form-group.has-feedback(class=error.value ? 'has-error' : void 0)
-          label.control-label.col-sm-3(for='value') Property value:
-          .col-sm-9
-            input#value.form-control(type='tel', name='value', value= value.value)
-            if error.value
-              span.help-block #{error.value}
-
-        .form-group.has-feedback(class=error.ssn ? 'has-error' : void 0)
-          label.control-label.col-sm-3(for='ssn') SSN:
-          .col-sm-9
-            input#ssn.form-control(type='tel', name='ssn', value= value.ssn)
-            if error.ssn
-              span.help-block #{error.ssn}
+        +field('amount', 'Loan amount')
+        +field('value', 'Property value')
+        +field('ssn', 'SSN')
         
         .form-group.has-feedback
           .col-sm-offset-3.col-sm-9
