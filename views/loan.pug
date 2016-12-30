@@ -6,6 +6,7 @@ mixin field(id, label)
     .col-sm-9
       input.form-control(id= id, type='tel', name= id, value= value[id])
       if error[id]
+        span.glyphicon.glyphicon-remove.form-control-feedback
         span.help-block #{error[id]}
 
 block title
