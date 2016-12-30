@@ -4,13 +4,37 @@ var express = require('express');
 var app = express();
 var Loan = require('./schemas/loan');
 
+var session = require('express-session');
+var cookieParser = require('cookie-parser');
+var flash = require('connect-flash');
+
+var sessionStore = new session.MemoryStore();
+
+app.use(cookieParser('81503F44-1D9A-4DB5-8A03-E70EF379C64C'));
+app.use(session({
+    cookie: { maxAge: 60000 },
+    store: sessionStore,
+    saveUninitialized: true,
+    resave: 'true',
+    secret: '81503F44-1D9A-4DB5-8A03-E70EF379C64C'
+}));
+app.use(flash());
+
+
 app.set('view engine', 'pug');
 
 var blankForm = { error: {}, value: {} };
 
-app.get('/', function(req, res) {
+app.get('/', function(req, res, next) {
   Loan.find(function(err, loans) {
-    res.render('dashboard', {loans: loans});
+    if (err) {
+      return next(err);
+    }
+// console.log(req.flash('message')[0]);
+    res.render('dashboard', {
+      loans: loans, 
+      message: req.flash('message')[0]
+    });
   });
 });
 
@@ -76,7 +100,9 @@ app.post('/loan', parseUrlEncoded, function(req, res, next) {
         return next(err);
       }
 
-      res.render('loan', locals);
+      // res.render('dashboard', locals);
+      req.flash('message', 'Loan request successfully saved.');
+      res.redirect('/');
     });
   } else {
     res.render('loan', locals);

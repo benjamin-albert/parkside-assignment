@@ -11,6 +11,11 @@ block content
   .row
     .col-sm-12
       hr
+      if message
+        div.alert.alert-success
+          strong Success!
+          |  #{message}
+
 
   .col-sm-12
   a.btn.btn-default(type='submit' href='/loan') Request a loan
