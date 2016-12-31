@@ -32,8 +32,8 @@ block content
       each loan in loans
         tr
           td #{loan.ssn}
-          td $ #{loan.commas(loan.amount)}
-          td $ #{loan.commas(loan.value)}
+          td $#{loan.commas(loan.amount)}
+          td $#{loan.commas(loan.value)}
           td #{loan.ltvPercent().toFixed(2)} %
           td #{loan.statusDesc()}
           td #{loan.id}
