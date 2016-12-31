@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var app = express();
 var LoanDAO = require('./loanDAO');
@@ -27,10 +29,11 @@ app.post('/loan', function(req, res, next) {
   var locals = { error: validateLoan(req.body), value: req.body };
 
   if (!Object.keys(locals.error).length) {
-    loanDAO.save(req.body, function(err) {
+    loanDAO.save(req.body, function(err, loan) {
       if (err) return next(err);
 
-      req.flash('message', 'Loan request successfully saved.');
+      var msg = 
+    req.flash('message', loan.createMessage());
       res.redirect('/');
     });
   } else {

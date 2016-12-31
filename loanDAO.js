@@ -1,3 +1,5 @@
+'use strict';
+
 var BigNumber = require('bignumber.js');
 var Loan = require('./schemas/loan');
 
@@ -19,7 +21,9 @@ LoanDAO.prototype.save = function(input, cb) {
     status: approved ? 0 : 1
   });
 
-  loan.save(cb);
+  loan.save(function(err) {
+    cb(err, loan);
+  });
 };
 
 LoanDAO.prototype.find = function(cb) {

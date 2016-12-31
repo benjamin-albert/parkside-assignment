@@ -24,4 +24,15 @@ Loan.methods.commas = function(val) {
     return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
+Loan.methods.createMessage = function() {
+    return [
+        'Loan request for $',
+        this.commas(this.amount),
+        ' was ',
+        this.statusDesc(), '.',
+        ' ID: ',
+        this.id, '.'
+    ].join('');
+};
+
 module.exports = mongoose.model('Loan', Loan);
