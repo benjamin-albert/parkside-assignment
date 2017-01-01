@@ -12,7 +12,7 @@ block content
     .col-sm-12
       hr
       if created
-        div.alert.alert-success
+        div.alert(class= (created.statusDesc === 'Accepted' ? 'alert-success' : 'alert-warning'))
           span Loan request for 
             strong $#{created.amount}
             |  was 
