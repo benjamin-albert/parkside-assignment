@@ -10,14 +10,19 @@ module.exports = app;
 var blankForm = { error: {}, value: {} };
 var loanDAO = new LoanDAO();
 
+
 app.get('/', function(req, res, next) {
+  var created = req.flash('created');
+  if (created && created.length) {
+    created = { id: created[0], statusDesc: created[1], amount: created[2] };
+  } else {
+    created = null;
+  }
+
   loanDAO.find(function(err, loans) {
     if (err) return next(err);
 
-    res.render('dashboard', {
-      loans: loans, 
-      message: req.flash('message')[0]
-    });
+    res.render('dashboard', { loans: loans, created: created });
   });
 });
 
@@ -32,8 +37,7 @@ app.post('/loan', function(req, res, next) {
     loanDAO.save(req.body, function(err, loan) {
       if (err) return next(err);
 
-      var msg = 
-    req.flash('message', loan.createMessage());
+      req.flash('created', [loan.id, loan.statusDesc(), loan.commas(loan.amount)]);
       res.redirect('/');
     });
   } else {
