@@ -9,5 +9,5 @@ app.listen(port, function(err) {
     throw err;
   }
 
-  console.log('Parkside server listening on port: ', port);
+  console.log('Parkside server listening on port', port);
 });
